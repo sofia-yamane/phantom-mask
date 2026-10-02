@@ -1,0 +1,270 @@
+/* =========================================================
+   1. TEMA — mude as cores, fontes e a imagem de fundo aqui
+   ========================================================= */
+:root{
+  --bg:        #0e020e;
+  --dots:      #5a0716;   /* pontinhos do fundo */
+
+  /* ---------- IMAGEM DE FUNDO ---------- */
+  --bg-image:  url("bg.jpg");    /* troque o nome se seu arquivo for outro */
+  --bg-dim:    rgba(14, 2, 14, .55);  /* escurece a foto para o texto ficar legível */
+  --bg-opacity: .60;                  /* 0 = invisível, 1 = imagem crua */
+
+  --panel:     rgba(17, 0, 12, .86);  /* painel translúcido — deixa a foto aparecer */
+  --ink:       #9e9090;   /* texto prateado */
+  --muted:     #706e6e;
+  --accent:    #6f0c1b;   /* vermelho sangue */
+  --edge:      #32080e;   /* bordas em relevo */
+  --link:      #ff4d4d;
+  --visited:   #b98ad0;
+  --title:     "UnifrakturCook","Old English Text MT","Times New Roman",serif;
+  --body:      Verdana,Tahoma,Geneva,sans-serif;
+  --mono:      "Courier New",Courier,monospace;
+  --page-width: 48rem;
+  color-scheme: dark;
+}
+
+/* =========================================================
+   2. BASE
+   ========================================================= */
+*,*::before,*::after{ box-sizing:border-box; }
+
+html{
+  height:100%;
+  background: var(--bg);   /* cor base por baixo de tudo */
+}
+
+body{
+  margin:0;
+  min-height:100%;
+  padding:1rem .5rem;
+  padding-top:calc(1rem + env(safe-area-inset-top, 0px));
+  padding-bottom:calc(1rem + env(safe-area-inset-bottom, 0px));
+
+  /* A foto vai num pseudo-elemento fixo (ver body::before).
+     Aqui ficam só a cor e os pontinhos. */
+  background-color: transparent;
+  background-image: radial-gradient(circle, var(--dots) 1px, transparent 1.6px);
+  background-size: 22px 22px;
+  background-position: 0 0;
+
+  color:var(--ink);
+  font:13px/1.6 var(--body);
+}
+
+/* Camada fixa com a imagem de fundo (funciona bem no iOS) */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background: var(--bg-image) center center / cover no-repeat;
+  opacity: var(--bg-opacity);
+}
+
+/* Véu escuro por cima da foto — apague se quiser a imagem mais crua */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background: var(--bg-dim);
+}
+
+a{ color:var(--link); }
+a:visited{ color:var(--visited); }
+a:hover{ color:#fff; background:var(--accent); }
+a:focus-visible{ outline:2px dotted #fff; outline-offset:2px; }
+
+/* =========================================================
+   3. LAYOUT
+   ========================================================= */
+.page{
+  max-width:var(--page-width);
+  margin:0 auto;
+  background:var(--panel);
+  backdrop-filter: blur(2px);        /* desfoque leve no painel — remova se travar */
+  -webkit-backdrop-filter: blur(2px);
+  border:5px ridge var(--edge);
+}
+
+.banner{
+  text-align:center;
+  padding:1.2rem .8rem .8rem;
+  border-bottom:3px double var(--edge);
+}
+.banner h1{
+  font-family:var(--title);
+  font-weight:700;
+  font-size:clamp(2.6rem, 12vw, 4.6rem);
+  line-height:1.05;
+  margin:0;
+  color:var(--accent);
+  text-shadow:3px 3px 0 #3a0008, 5px 5px 0 #000;
+}
+.banner p{
+  font-family:"Times New Roman",Times,serif;
+  font-style:italic;
+  font-size:1.15rem;
+  margin:.4rem 0 0;
+  color:var(--muted);
+}
+
+.cols{
+  display:grid;
+  grid-template-columns:11.5rem 1fr;
+}
+aside{
+  padding:.8rem;
+  border-right:3px double var(--edge);
+  background:rgba(7, 7, 7, .75);
+}
+main{
+  padding:1rem 1.2rem 1.5rem;
+  min-width:0;
+}
+
+/* =========================================================
+   4. FAIXA ROLANTE (marquee)
+   ========================================================= */
+.marquee{
+  overflow:hidden;
+  white-space:nowrap;
+  background:#1a0509;
+  border-bottom:2px solid var(--edge);
+  color:var(--accent);
+  font-family:var(--mono);
+  font-weight:bold;
+  padding:.25rem 0;
+}
+.marquee span{
+  display:inline-block;
+  padding-left:100%;
+  animation:scroll 18s linear infinite;
+}
+@keyframes scroll{ to{ transform:translateX(-100%); } }
+
+.blink{ animation:blink 1s steps(1) infinite; color:#ffeb3b; font-weight:bold; }
+@keyframes blink{ 50%{ visibility:hidden; } }
+
+@media (prefers-reduced-motion: reduce){
+  .marquee{ white-space:normal; }
+  .marquee span{ animation:none; padding-left:.6rem; white-space:normal; }
+  .blink{ animation:none; }
+}
+
+/* =========================================================
+   5. BARRA LATERAL
+   ========================================================= */
+.btn{
+  display:block;
+  text-align:center;
+  margin:0 0 .4rem;
+  padding:.3rem;
+  background:#222;
+  color:#ddd !important;
+  text-decoration:none;
+  border:2px outset #777;
+  font-weight:bold;
+}
+.btn:hover{ background:var(--accent); }
+.btn:active{ border-style:inset; }
+.btn.is-active{ background:var(--accent); color:#fff !important; border-style:inset; }
+
+.box{
+  margin:1rem 0;
+  padding:.5rem;
+  border:2px inset #444;
+  text-align:center;
+  font-size:11px;
+  color:var(--muted);
+}
+.counter{
+  font-family:var(--mono);
+  font-weight:bold;
+  font-size:1.2rem;
+  letter-spacing:1px;
+}
+.counter i{
+  font-style:normal;
+  display:inline-block;
+  background:#000;
+  color:#ff3b3b;
+  border:1px inset #555;
+  padding:0 3px;
+  margin:0 1px;
+}
+
+/* =========================================================
+   6. CONTEÚDO
+   ========================================================= */
+h2{
+  font-family:var(--title);
+  font-weight:700;
+  font-size:1.9rem;
+  color:var(--accent);
+  margin:0 0 .5rem;
+  text-shadow:2px 2px 0 #3a0008;
+}
+hr{ border:0; border-top:3px ridge var(--edge); margin:1.4rem 0; }
+
+.post-item{ margin:0 0 1.1rem; }
+.post-item h3{ font-size:1.1rem; margin:0; }
+.post-item p{ margin:.2rem 0; }
+
+.date{
+  font-family:var(--mono);
+  color:var(--muted);
+  font-size:12px;
+}
+
+article h1{
+  font-family:var(--title);
+  font-weight:700;
+  font-size:2.3rem;
+  line-height:1.1;
+  color:var(--accent);
+  margin:0 0 .4rem;
+  text-shadow:2px 2px 0 #3a0008;
+}
+article .body{
+  margin-top:1rem;
+  font-size:14px;
+  line-height:1.75;
+}
+.about p{ margin:0 0 .8rem; }
+
+.post-nav{
+  display:flex;
+  justify-content:space-between;
+  gap:1rem;
+  font-family:var(--mono);
+  font-size:12px;
+}
+.post-nav a{ flex:1; text-decoration:none; }
+.post-nav a:last-child{ text-align:right; }
+
+.empty{ color:var(--muted); font-style:italic; }
+.more{ font-family:var(--mono); font-size:12px; }
+
+/* =========================================================
+   7. RODAPÉ
+   ========================================================= */
+footer{
+  padding:.8rem;
+  border-top:3px double var(--edge);
+  text-align:center;
+  font-size:11px;
+  color:var(--muted);
+}
+footer a{ margin:0 .3rem; }
+
+/* =========================================================
+   8. RESPONSIVO
+   ========================================================= */
+@media (max-width: 40rem){
+  .cols{ grid-template-columns:1fr; }
+  aside{ border-right:0; border-bottom:3px double var(--edge); }
+}
